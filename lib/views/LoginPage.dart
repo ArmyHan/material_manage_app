@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_manage_app/models/UserModel.dart';
-import 'package:material_manage_app/views/HomePage.dart';
+import 'package:material_manage_app/views/ListPage.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPageState createState() => new LoginPageState();
@@ -50,11 +50,13 @@ class LoginPageState extends State<LoginPage> {
                       child: MaterialButton(
                         minWidth: 400.0,
                         height: 42.0,
-                        onPressed: () => Navigator.of(context).push(
+                        /*onPressed: () => Navigator.of(context).push(
                                 new PageRouteBuilder(
                                     pageBuilder: (BuildContext context, _, __) {
-                              return new HomePage(title: "武汉物资管理系统");
-                            })),
+                              return new ListPage(title: "武汉物资管理系统");
+                            })),*/
+                        onPressed: () =>
+                            Navigator.pushReplacementNamed(context, "/home"),
                         color: Colors.blue,
                         splashColor: Colors.blue,
                         child: _isLoading
