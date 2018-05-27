@@ -12,10 +12,10 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: '武汉物资管理系统'),
+      home: new LoginPage(),
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => new LoginPage(),
-        '/home': (BuildContext context) => new MyHomePage()
+        '/home': (BuildContext context) => new HomePage()
       },
     );
   }

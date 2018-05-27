@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:material_manage_app/components/MyListView.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _HomePageState createState() => new _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   void _returnTop() {
     setState(() {});
   }
