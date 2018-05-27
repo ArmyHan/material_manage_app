@@ -20,7 +20,7 @@ class MyListViewState extends State<MyListView> {
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
-        itemCount: data.length,
+        itemCount: data == null ? 0 : data.length,
         itemBuilder: (BuildContext context, int index) {
           return new Card(
             child: new Container(

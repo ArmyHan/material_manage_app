@@ -19,6 +19,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
+        automaticallyImplyLeading: false,
+        actions: <Widget>[
+          new IconButton(
+              icon: new Icon(Icons.exit_to_app),
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, "/login"))
+        ],
       ),
       body: new Center(
         child: new MyListView(),
