@@ -14,6 +14,7 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        leading: new Icon(Icons.public),
         title: new Text(
           widget.title,
           style: new TextStyle(

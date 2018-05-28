@@ -1,78 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:material_manage_app/models/UserModel.dart';
+import 'package:material_manage_app/components/LoginForm.dart';
+import 'package:material_manage_app/style/LoginStyle.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPageState createState() => new LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
+  AnimationController _loginButtonController;
+
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-    UserModel user = new UserModel();
-    bool _isLoading = false;
-
     return new Scaffold(
       body: Container(
-        padding: EdgeInsets.only(left: 50.0, right: 50.0),
-        margin: EdgeInsets.only(top: 130.0),
-        child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                TextFormField(
-                  keyboardType: TextInputType.text,
-                  autofocus: false,
-                  onSaved: (String text) => user.avatar = text,
-                  decoration: InputDecoration(
-                      hintText: '账 号',
-                      contentPadding:
-                          EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0)),
-                ),
-                SizedBox(height: 8.0),
-                TextFormField(
-                    autofocus: false,
-                    obscureText: true,
-                    onSaved: (String text) => user.password = text,
-                    decoration: InputDecoration(
-                      hintText: '密 码',
-                      contentPadding:
-                          EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    )),
-                SizedBox(height: 8.0),
-                Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Material(
-                      shadowColor: Colors.blue,
-                      elevation: 4.0,
-                      child: MaterialButton(
-                        minWidth: 400.0,
-                        height: 42.0,
-                        /*onPressed: () => Navigator.of(context).push(
-                                new PageRouteBuilder(
-                                    pageBuilder: (BuildContext context, _, __) {
-                              return new ListPage(title: "武汉物资管理系统");
-                            })),*/
-                        onPressed: () =>
-                            Navigator.pushReplacementNamed(context, "/home"),
-                        color: Colors.blue,
-                        splashColor: Colors.blue,
-                        child: _isLoading
-                            ? CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                                strokeWidth: 2.0,
-                              )
-                            : Text(
-                                '登  录',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                      ),
-                    ))
-              ],
-            )),
+        decoration: new BoxDecoration(
+          image: backgroundImage,
+        ),
+        child: new Container(
+          decoration: new BoxDecoration(
+              gradient: new LinearGradient(
+            colors: <Color>[
+              const Color.fromRGBO(162, 146, 199, 0.8),
+              const Color.fromRGBO(51, 51, 63, 0.9),
+            ],
+            stops: [0.2, 1.0],
+            begin: const FractionalOffset(0.0, 0.0),
+            end: const FractionalOffset(0.0, 1.0),
+          )),
+          padding: EdgeInsets.only(left: 50.0, right: 50.0, top: 120.0),
+          child: new LoginForm(),
+        ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loginButtonController = new AnimationController(
+        duration: new Duration(milliseconds: 3000), vsync: this);
   }
 }
