@@ -23,6 +23,7 @@ class MyListViewState extends State<MyListView> {
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (BuildContext context, int index) {
           return new Card(
+            elevation: 4.0,
             child: new Container(
               padding: new EdgeInsets.all(10.0),
               child: new ListTile(
@@ -36,6 +37,7 @@ class MyListViewState extends State<MyListView> {
                           new Expanded(
                               child: new Text(
                             data[index]["title"],
+                            maxLines: 1,
                             style: new TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16.0),
                           ))

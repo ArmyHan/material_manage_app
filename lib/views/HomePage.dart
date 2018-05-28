@@ -26,18 +26,16 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new TabBarView(controller: controller, children: <Widget>[
-        new ListPage(title: "武汉物资管理系统1"),
-        new ListPage(title: "武汉物资管理系统2"),
-        new ListPage(title: "武汉物资管理系统3"),
+        new ListPage(title: "动态"),
+        new ListPage(title: "创建"),
+        new ListPage(title: "购物车"),
       ]),
       bottomNavigationBar: new Material(
         color: Colors.blue,
-        shadowColor: Colors.blue,
-        elevation: 4.0,
         child: new TabBar(controller: controller, tabs: <Tab>[
-          new Tab(text: "列表1", icon: new Icon(Icons.list)),
-          new Tab(text: "列表2", icon: new Icon(Icons.list)),
-          new Tab(text: "列表3", icon: new Icon(Icons.list)),
+          new Tab(icon: new Icon(Icons.art_track)),
+          new Tab(icon: new Icon(Icons.add_circle)),
+          new Tab(icon: new Icon(Icons.shopping_cart)),
         ]),
       ),
     );

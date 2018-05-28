@@ -10,15 +10,16 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  void _returnTop() {
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(widget.title),
+        title: new Text(
+          widget.title,
+          style: new TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0),
+        ),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           new IconButton(
@@ -29,11 +30,6 @@ class _ListPageState extends State<ListPage> {
       ),
       body: new Center(
         child: new MyListView(),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _returnTop,
-        tooltip: '返回顶部',
-        child: new Icon(Icons.vertical_align_top),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
