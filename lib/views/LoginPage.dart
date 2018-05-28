@@ -7,7 +7,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
-  AnimationController _loginButtonController;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +36,10 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             begin: const FractionalOffset(0.0, 0.0),
             end: const FractionalOffset(0.0, 1.0),
           )),
-          padding: EdgeInsets.only(left: 50.0, right: 50.0, top: 120.0),
+          padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 130.0),
           child: new LoginForm(),
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loginButtonController = new AnimationController(
-        duration: new Duration(milliseconds: 3000), vsync: this);
   }
 }
