@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:material_manage_app/models/UserModel.dart';
+import 'package:material_manage_app/views/DrawerPage.dart';
 import 'package:material_manage_app/views/ListPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,17 +26,20 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    UserModel user = new UserModel("吴建川", "leyansorosame@gmail.com");
     return new Scaffold(
+      appBar: new AppBar(title: new Text("物资管理")),
+      drawer: new DrawerPage(user: user),
       body: new TabBarView(controller: controller, children: <Widget>[
-        new ListPage(title: "动态"),
-        new ListPage(title: "创建"),
-        new ListPage(title: "购物车"),
+        new ListPage(),
+        new ListPage(),
+        new ListPage(),
       ]),
       bottomNavigationBar: new Material(
         color: Colors.blue,
         child: new TabBar(controller: controller, tabs: <Tab>[
           new Tab(icon: new Icon(Icons.art_track)),
-          new Tab(icon: new Icon(Icons.add_circle)),
+          new Tab(icon: new Icon(Icons.message)),
           new Tab(icon: new Icon(Icons.shopping_cart)),
         ]),
       ),
