@@ -1,4 +1,4 @@
-## 物资管理APP
+## 弗拉特尔~try-try-try
 
 Albert Einstein: Logic will get you from A to B. Imagination will take you everywhere.
 
