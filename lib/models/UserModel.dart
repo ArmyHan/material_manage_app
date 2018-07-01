@@ -1,7 +1,8 @@
 class UserModel {
+  String name;
   String avatar;
   String password;
-  String email;
+  String memo;
 
-  UserModel(this.avatar, this.email);
+  UserModel({this.avatar, this.name, this.memo, this.password});
 }

@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:material_manage_app/models/UserModel.dart';
+import 'package:material_manage_app/util/MessageUtils.dart';
 import 'package:material_manage_app/views/DrawerPage.dart';
-import 'package:material_manage_app/views/ListPage.dart';
+import 'package:material_manage_app/views/MessageListPage.dart';
+import 'package:material_manage_app/views/StorageInventoryListPage.dart';
 
 class HomePage extends StatefulWidget {
+  HomePage({Key key, this.user}) : super(key: key);
+  UserModel user;
+
   @override
-  _HomePageState createState() => new _HomePageState();
+  HomePageState createState() => new HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = new TabController(length: 3, vsync: this);
+    if (widget.user != null) {
+       MessageUtils.connect();
+    }
+    controller = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -26,23 +34,46 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    UserModel user = new UserModel("吴建川", "leyansorosame@gmail.com");
-    return new Scaffold(
-      appBar: new AppBar(title: new Text("物资管理")),
-      drawer: new DrawerPage(user: user),
-      body: new TabBarView(controller: controller, children: <Widget>[
-        new ListPage(),
-        new ListPage(),
-        new ListPage(),
-      ]),
-      bottomNavigationBar: new Material(
-        color: Colors.blue,
-        child: new TabBar(controller: controller, tabs: <Tab>[
-          new Tab(icon: new Icon(Icons.art_track)),
-          new Tab(icon: new Icon(Icons.message)),
-          new Tab(icon: new Icon(Icons.shopping_cart)),
+    return _getBody();
+  }
+
+  _getBody() {
+    if (widget.user == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text("物资管理")),
+        body: Center(
+          child: InkWell(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 8.0),
+              child: Text("去登录"),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                  borderRadius: new BorderRadius.all(new Radius.circular(5.0))),
+            ),
+            onTap: () {
+              Navigator.of(context).pushNamed('/login');
+            },
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(title: Text("物资管理")),
+        drawer: DrawerPage(user: widget.user),
+        body: TabBarView(controller: controller, children: <Widget>[
+          new StorageInventoryListPage(),
+          new MessageListPage(),
+          new StorageInventoryListPage(),
         ]),
-      ),
-    );
+        bottomNavigationBar: Material(
+          color: Colors.blue,
+          child: TabBar(controller: controller, tabs: <Tab>[
+            new Tab(icon: Icon(Icons.category)),
+            new Tab(icon: Icon(Icons.message)),
+            new Tab(icon: Icon(Icons.shopping_cart)),
+          ]),
+        ),
+      );
+    }
   }
 }

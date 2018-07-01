@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:material_manage_app/models/UserModel.dart';
+import 'package:material_manage_app/util/DataUtils.dart';
 import 'package:material_manage_app/views/HomePage.dart';
 import 'package:material_manage_app/views/LoginPage.dart';
-import 'package:local_notifications/local_notifications.dart';
 
-void main() => runApp(new MyApp());
+void main() {
+  DataUtils.getUserInfo().then((userInfo) {
+    runApp(MyApp(userInfo));
+  });
+}
 
 class MyApp extends StatelessWidget {
-  void getNotification() async {
-    await LocalNotifications.createNotification(
-      id: 0,
-      title: '新消息',
-      content: '献血服务科申请了物料请及时审核。',
-      onNotificationClick: new NotificationAction(
-          actionText: "some action", callback: null, payload: "some payload"),
-    );
-  }
+  MyApp(this.userModel);
+
+  UserModel userModel;
 
   @override
   Widget build(BuildContext context) {
-    getNotification();
-    return new MaterialApp(
-      title: 'Flutter Demo',
-      theme: new ThemeData(
-        primarySwatch: Colors.blue,
+    DataUtils.getUserInfo().then((userInfo) => userModel = userInfo);
+    return MaterialApp(
+      title: 'MaterialManagement',
+      theme: ThemeData(
+          accentColor: Colors.orange, primaryColor: Colors.blue
       ),
-      home: new LoginPage(),
+      home: HomePage(
+        user: userModel,
+      ),
       routes: <String, WidgetBuilder>{
-        '/login': (BuildContext context) => new LoginPage(),
-        '/home': (BuildContext context) => new HomePage()
+        '/login': (BuildContext context) => LoginPage(),
+        '/home': (BuildContext context) => HomePage()
       },
     );
   }

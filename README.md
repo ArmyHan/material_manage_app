@@ -1,8 +1,5 @@
 ## 物资管理APP
 
-A new Flutter project.
+Albert Einstein: Logic will get you from A to B. Imagination will take you everywhere.
 
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](http://flutter.io/).
+![ScreenGif](https://gitlab.com/leyan95/material_manage_app/raw/master/assets/screen_gif/materialManagement.gif)
