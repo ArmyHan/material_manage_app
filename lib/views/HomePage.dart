@@ -7,7 +7,7 @@ import 'package:material_manage_app/views/StorageInventoryListPage.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.user}) : super(key: key);
-  UserModel user;
+  final UserModel user;
 
   @override
   HomePageState createState() => new HomePageState();

@@ -12,6 +12,7 @@ class _MessageListPageState extends State<MessageListPage> {
 
   @override
   void initState() {
+    super.initState();
     messageList.add(result);
   }
 
@@ -35,8 +36,7 @@ class _MessageListPageState extends State<MessageListPage> {
                             messageList.removeAt(index);
                           });
                           if (direction == DismissDirection.endToStart) {
-                            showSnackBar(
-                                _scaffoldHomeState, "消息已读",
+                            showSnackBar(_scaffoldHomeState, "消息已读",
                                 materialColor: Colors.green);
                           } else {
                             showSnackBar(_scaffoldHomeState, "已删除",

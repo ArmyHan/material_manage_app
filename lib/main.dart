@@ -13,11 +13,10 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp(this.userModel);
 
-  UserModel userModel;
+  final UserModel userModel;
 
   @override
   Widget build(BuildContext context) {
-    DataUtils.getUserInfo().then((userInfo) => userModel = userInfo);
     return MaterialApp(
       title: 'MaterialManagement',
       theme: ThemeData(
