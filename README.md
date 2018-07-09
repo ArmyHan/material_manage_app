@@ -1,5 +1,85 @@
 ## Flutter小工具
 
+### 实现登录功能
+> 为避免用户通过登录界面登录应用后按返回键仍能回到登录界面，我们需要在用户登录后创建一个新的路由栈
+
+直接上代码，程序入口：
+
+```dart
+void main() {
+  DataUtils.getUserInfo().then((userInfo) {
+    runApp(MyApp(userInfo));
+  });
+}
+
+class MyApp extends StatelessWidget {
+  MyApp(this.userModel);
+
+  final UserModel userModel;
+
+  @override
+  Widget build(BuildContext context) {
+    GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+    return MaterialApp(
+      title: 'MaterialManagement',
+      theme: ThemeData(accentColor: Colors.white, primaryColor: Colors.blue),
+      home: userModel == null
+          ? LoginPage()
+          : HomePage(),
+      routes: <String, WidgetBuilder>{
+        '/login': (BuildContext context) => LoginPage(),
+        '/home': (BuildContext context) => HomePage()
+      },
+    );
+  }
+}
+```
+现在我们要定义一个 `loginButton` 的 `onPressed` 事件的回调函数 `_loginWithAvatarAndPassword` 来完成重新创建路由栈的工作，这样就可以避免在登录成功后按返回键回到登录界面的问题（注销同理）：
+```dart
+Future<dynamic> _loginWithAvatarAndPassword() async {
+        final form = _formKey.currentState;
+        if (form.validate()) {
+          _formKey.currentState.save();
+          LoginUtils.login(user.avatar, user.password, (isAlive, userInfo) {
+            if (isAlive) {
+              runApp(MyApp(userInfo)); // look here!
+            }
+          });
+        }
+    }
+```
+
+---
+
+### 实现双击退出应用功能
+>  `WillPopScope` 注册一个回调 `onWillPop` 用来自定义用户对路由的操作
+
+自定义我们的回调函数，
+```dart
+Future<bool> _doubleExit() {
+    int nowTime = new DateTime.now().microsecondsSinceEpoch;
+    if (_lastClickTime != 0 && nowTime - _lastClickTime > 1500) {
+      return new Future.value(true);
+    } else {
+      _lastClickTime = new DateTime.now().microsecondsSinceEpoch;
+      new Future.delayed(const Duration(milliseconds: 1500), () {
+        _lastClickTime = 0;
+      });
+      return new Future.value(false);
+    }
+  }
+```
+
+将事先创建好的子节点 `_getBody()` 嵌套在 `WillPopScope` 中
+```dart
+Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _doubleExit, // look here!
+      child: _getBody(),
+    );
+  }
+```
+
 ### 下拉刷新
 
 > 很简单，直接使用 `RefreshIndicator` 组件， `onRefresh` 为重新获取数据的方法
