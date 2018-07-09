@@ -292,3 +292,195 @@ _getMoreData() async {
 
 
 ### 与WebSocket通讯实现消息推送
+
+- Flutter 中的消息管理工具：
+
+```dart
+class MessageUtils {
+  static WebSocket _webSocket;
+  static num _id = 0;
+
+  static void connect() {
+    Future<WebSocket> futureWebSocket =
+        WebSocket.connect(Api.WS_URL + "/leyan");// Api.WS_URL 为服务器端的 websocket 服务
+    futureWebSocket.then((WebSocket ws) {
+      _webSocket = ws;
+      _webSocket.readyState;
+      // 监听事件
+      void onData(dynamic content) {
+        _id++;
+        _sendMessage("收到");
+        _createNotification("新消息", content + _id.toString());
+      }
+
+      _webSocket.listen(onData,
+          onError: (a) => print("error"), onDone: () => print("done"));
+    });
+  }
+
+  static void closeSocket() {
+    _webSocket.close();
+  }
+
+  // 向服务器发送消息
+  static void _sendMessage(String message) {
+    _webSocket.add(message);
+  }
+
+  // 手机状态栏弹出推送的消息
+  static void _createNotification(String title, String content) async {
+    await LocalNotifications.createNotification(
+      id: _id,
+      title: title,
+      content: content,
+      onNotificationClick: NotificationAction(
+          actionText: "some action",
+          callback: _onNotificationClick,
+          payload: "接收成功！"),
+    );
+  }
+
+  static _onNotificationClick(String payload) {
+    LocalNotifications.removeNotification(_id);
+    _sendMessage("消息已被阅读");
+  }
+}
+```
+
+- websocket 服务：
+
+```java
+@ServerEndpoint(value = "/api/ws/{userid}")// 对应 Api.WS_URL
+@Component
+public class SocketServer {
+
+    private Session session;
+    private static Map<String, Session> sessionPool = new HashMap<>();
+    private static Map<String, String> sessionIds = new HashMap<>();
+
+    private static Map<String, TreeSet<String>> remainingMessagePool = new HashMap<>(128);
+
+    /**
+     * 用户连接时触发
+     *
+     * @param session
+     * @param userid
+     */
+    @OnOpen
+    public void open(Session session, @PathParam(value = "userid") String userid) {
+        this.session = session;
+        sessionPool.put(userid, session);
+        sessionIds.put(session.getId(), userid);
+        // 离线消息发送
+        if (remainingMessagePool.get(userid) != null) {
+            TreeSet<String> remainingMessages = remainingMessagePool.get(userid);
+            remainingMessages.forEach(it -> sendMessage(it, userid));
+            remainingMessagePool.remove(userid);
+        }
+    }
+
+    /**
+     * 收到信息时触发
+     *
+     * @param message
+     */
+    @OnMessage
+    public void onMessage(String message) {
+        System.out.println("发送人:" + sessionIds.get(session.getId()) + "内容:" + message);
+    }
+
+    /**
+     * 连接关闭触发
+     */
+    @OnClose
+    public void onClose() {
+        sessionPool.remove(sessionIds.get(session.getId()));
+        sessionIds.remove(session.getId());
+    }
+
+    /**
+     * 发生错误时触发
+     *
+     * @param session
+     * @param error
+     */
+    @OnError
+    public void onError(Session session, Throwable error) {
+        error.printStackTrace();
+    }
+
+    /**
+     * 信息发送的方法
+     *
+     * @param message
+     * @param userId
+     */
+    public static void sendMessage(String message, String userId) {
+        Session s = sessionPool.get(userId);
+        if (s != null) {
+            try {
+                s.getBasicRemote().sendText(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // 离线消息存储
+            if (remainingMessagePool.get(userId) != null) {
+                TreeSet<String> remainingMessages = remainingMessagePool.get(userId);
+                remainingMessages.add(message);
+            } else {
+                TreeSet<String> remainingMessages = new TreeSet<>();
+                remainingMessages.add(message);
+                remainingMessagePool.put(userId, remainingMessages);
+            }
+        }
+    }
+
+    /**
+     * 获取当前连接数
+     *
+     * @return
+     */
+    public static int getOnlineNum() {
+        return sessionPool.size();
+    }
+
+    /**
+     * 获取在线用户名以逗号隔开
+     *
+     * @return
+     */
+    public static String getOnlineUsers() {
+        StringBuffer users = new StringBuffer();
+        for (String key : sessionIds.keySet()) {
+            users.append(sessionIds.get(key) + ",");
+        }
+        return users.toString();
+    }
+
+    /**
+     * 信息群发
+     *
+     * @param msg
+     */
+    public static void sendAll(String msg) {
+        for (String key : sessionIds.keySet()) {
+            sendMessage(msg, sessionIds.get(key));
+        }
+    }
+
+    /**
+     * 多个人发送给指定的几个用户
+     *
+     * @param msg
+     * @param persons 用户s
+     */
+
+    public static void SendMany(String msg, String[] persons) {
+        for (String userid : persons) {
+            sendMessage(msg, userid);
+        }
+
+    }
+}
+```
